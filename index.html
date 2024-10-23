@@ -11,7 +11,17 @@
 
 <body>
   <div class="container">
-    <h2>JOGO DA MEMÓRIA</h2>
+  <h2>JOGO DA MEMÓRIA</h2>
+  <div>
+      <label for="difficulty">Selecione a dificuldade: </label>
+      <select id="difficulty">
+        <option value="easy">Fácil (60 segundos)</option>
+        <option value="medium">Médio (45 segundos)</option>
+        <option value="hard">Difícil (30 segundos)</option>
+      </select>
+      <button onclick="startGame()">Iniciar Jogo</button>
+    </div>
+    <h3>Tempo restante: <span id="timer">0</span> segundos</h3>
     <div class="game"></div>
     <button class="reset" onclick="window.location.reload()">RESET GAME</button>
   </div>
