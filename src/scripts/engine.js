@@ -1,31 +1,54 @@
 const emojis = [
-  "🐱",
-  "🐱",
-  "🦝",
-  "🦝",
-  "🦊",
-  "🦊",
-  "🐶",
-  "🐶",
-  "🐵",
-  "🐵",
-  "🦁",
-  "🦁",
-  "🐯",
-  "🐯",
-  "🐮",
-  "🐮",
+  "🐱", "🐱", "🦝", "🦝", "🦊", "🦊", 
+  "🐶", "🐶", "🐵", "🐵", "🦁", "🦁", 
+  "🐯", "🐯", "🐮", "🐮"
 ];
+
 let openCards = [];
+let timerId;
+let timeLeft;
+let difficulty;
 
-let shuffleEmojis = emojis.sort(() => (Math.random() > 0.5 ? 2 : -1));
+function startGame() {
+  const gameBoard = document.querySelector('.game');
+  gameBoard.innerHTML = ''; // Limpa o tabuleiro
 
-for (let i = 0; i < emojis.length; i++) {
-  let box = document.createElement("div");
-  box.className = "item";
-  box.innerHTML = shuffleEmojis[i];
-  box.onclick = handleClick;
-  document.querySelector(".game").appendChild(box);
+  // Definir dificuldade
+  difficulty = document.getElementById("difficulty").value;
+  if (difficulty === 'easy') {
+    timeLeft = 60;
+  } else if (difficulty === 'medium') {
+    timeLeft = 45;
+  } else if (difficulty === 'hard') {
+    timeLeft = 30;
+  }
+
+  // Atualiza o timer na tela
+  document.getElementById("timer").textContent = timeLeft;
+
+  // Embaralha e distribui os emojis
+  let shuffleEmojis = emojis.sort(() => (Math.random() > 0.5 ? 2 : -1));
+  for (let i = 0; i < emojis.length; i++) {
+    let box = document.createElement("div");
+    box.className = "item";
+    box.innerHTML = shuffleEmojis[i];
+    box.onclick = handleClick;
+    gameBoard.appendChild(box);
+  }
+
+  // Inicia o temporizador
+  timerId = setInterval(countDown, 1000);
+}
+
+function countDown() {
+  timeLeft--;
+  document.getElementById("timer").textContent = timeLeft;
+  
+  if (timeLeft <= 0) {
+    clearInterval(timerId);
+    alert("Fim de jogo! O tempo acabou.");
+    document.querySelectorAll('.item').forEach(box => box.onclick = null); // Desabilita cliques
+  }
 }
 
 function handleClick() {
@@ -37,8 +60,6 @@ function handleClick() {
   if (openCards.length == 2) {
     setTimeout(checkMatch, 500);
   }
-
-  console.log(openCards);
 }
 
 function checkMatch() {
@@ -53,6 +74,7 @@ function checkMatch() {
   openCards = [];
 
   if (document.querySelectorAll(".boxMatch").length === emojis.length) {
-    alert("Você venceu !");
+    clearInterval(timerId); // Para o temporizador se o jogador ganhar
+    alert("Você venceu!");
   }
 }
